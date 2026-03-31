@@ -317,7 +317,7 @@ window.__firebaseReady = new Promise(resolve => {
     background:linear-gradient(135deg,var(--cyan),var(--cyan2));border:none;cursor:pointer;
     display:flex;align-items:center;justify-content:center;font-size:24px;
     box-shadow:0 8px 32px rgba(0,200,240,.4),0 2px 8px rgba(0,0,0,.4);
-    z-index:900;transition:transform .2s,box-shadow .2s;animation:fabIn .4s ease both;
+    z-index:2000;transition:transform .2s,box-shadow .2s;animation:fabIn .4s ease both;
     visibility:hidden;
   }
   @keyframes fabIn{from{transform:scale(0)}to{transform:scale(1)}}
@@ -328,7 +328,7 @@ window.__firebaseReady = new Promise(resolve => {
     position:fixed;bottom:96px;right:28px;width:380px;max-height:560px;
     background:var(--navy2);border:1px solid var(--border);border-radius:16px;
     box-shadow:0 24px 64px rgba(0,0,0,.6),0 0 0 1px rgba(0,200,240,.08);
-    display:none;flex-direction:column;z-index:900;overflow:hidden;
+    display:none;flex-direction:column;z-index:2000;overflow:hidden;
     animation:chatIn .25s ease both;
   }
   @keyframes chatIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
@@ -1367,7 +1367,7 @@ document.querySelectorAll('.overlay').forEach(o => {
 //  CHAT IA
 // ══════════════════════════════════════════════
 // Cole sua chave da API Anthropic aqui quando tiver:
-const ANTHROPIC_API_KEY = 'SUA_CHAVE_AQUI'; // sk-ant-...
+const ANTHROPIC_API_KEY = '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';
 
 const AI_SYSTEM = `Você é um assistente de análise de dados da Credere Consultoria e Fomento Mercantil, empresa de factoring/recebíveis baseada em Guarulhos, SP.
 
