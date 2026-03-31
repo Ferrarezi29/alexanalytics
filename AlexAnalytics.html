@@ -264,11 +264,12 @@ window.__firebaseReady = new Promise(resolve => {
   select option { background:var(--navy2); }
   select:focus  { border-color:var(--cyan); }
 
-  /* VIEWER */
-  .viewer-modal { max-width:95vw;width:1100px;height:85vh;display:flex;flex-direction:column;padding:0; }
-  .viewer-hdr   { display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--border);flex-shrink:0; }
+  /* VIEWER — TELA CHEIA */
+  #modal-viewer { padding:0; }
+  .viewer-modal { max-width:100vw!important;width:100vw!important;height:100vh!important;display:flex;flex-direction:column;padding:0;border-radius:0;border:none;margin:0; }
+  .viewer-hdr   { display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--navy2); }
   .viewer-hdr span { font-size:15px;font-weight:700; }
-  iframe        { flex:1;border:none;border-radius:0 0 16px 16px; }
+  iframe        { flex:1;border:none;width:100%;height:100%; }
 
   /* USERS TABLE */
   .table-wrap { background:var(--navy2);border:1px solid var(--border);border-radius:13px;overflow:hidden; }
@@ -305,6 +306,68 @@ window.__firebaseReady = new Promise(resolve => {
   }
   @media(max-width:560px){
     .stats{grid-template-columns:1fr;}
+
+  /* ═══ CHAT FLUTUANTE ═══ */
+  #chat-fab {
+    position:fixed;bottom:28px;right:28px;width:56px;height:56px;border-radius:50%;
+    background:linear-gradient(135deg,var(--cyan),var(--cyan2));border:none;cursor:pointer;
+    display:none;align-items:center;justify-content:center;font-size:24px;
+    box-shadow:0 8px 32px rgba(0,200,240,.4),0 2px 8px rgba(0,0,0,.4);
+    z-index:900;transition:transform .2s,box-shadow .2s;animation:fabIn .4s ease both;
+  }
+  @keyframes fabIn{from{transform:scale(0)}to{transform:scale(1)}}
+  #chat-fab:hover{transform:scale(1.08);box-shadow:0 12px 40px rgba(0,200,240,.5);}
+  #chat-fab .fab-dot{position:absolute;top:-2px;right:-2px;width:14px;height:14px;background:var(--ok);border-radius:50%;border:2px solid var(--navy);}
+
+  #chat-panel{
+    position:fixed;bottom:96px;right:28px;width:380px;max-height:560px;
+    background:var(--navy2);border:1px solid var(--border);border-radius:16px;
+    box-shadow:0 24px 64px rgba(0,0,0,.6),0 0 0 1px rgba(0,200,240,.08);
+    display:none;flex-direction:column;z-index:900;overflow:hidden;
+    animation:chatIn .25s ease both;
+  }
+  @keyframes chatIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
+  #chat-panel.open{display:flex;}
+
+  .chat-hdr{padding:14px 16px;background:linear-gradient(135deg,rgba(0,200,240,.1),rgba(0,168,204,.05));border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+  .chat-hdr-ico{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--cyan),var(--cyan2));display:flex;align-items:center;justify-content:center;font-size:17px;}
+  .chat-hdr-info{flex:1;}
+  .chat-hdr-title{font-size:13px;font-weight:800;}
+  .chat-hdr-sub{font-size:10px;color:var(--muted);margin-top:1px;}
+  .chat-x{background:none;border:none;cursor:pointer;color:var(--muted);font-size:17px;padding:4px;transition:color .15s;border-radius:5px;}
+  .chat-x:hover{color:var(--text);}
+
+  .chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:0;}
+  .chat-msgs::-webkit-scrollbar{width:3px;}
+  .chat-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+  .msg{display:flex;flex-direction:column;gap:3px;max-width:86%;}
+  .msg.user{align-self:flex-end;align-items:flex-end;}
+  .msg.ai{align-self:flex-start;align-items:flex-start;}
+  .msg-bub{padding:9px 13px;border-radius:11px;font-size:13px;line-height:1.55;}
+  .msg.user .msg-bub{background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:var(--navy);font-weight:600;border-bottom-right-radius:3px;}
+  .msg.ai   .msg-bub{background:var(--navy3);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:3px;}
+  .msg-time{font-size:10px;color:var(--muted);}
+
+  .chat-typing{align-self:flex-start;display:none;gap:5px;padding:11px 14px;background:var(--navy3);border:1px solid var(--border);border-radius:11px;border-bottom-left-radius:3px;}
+  .chat-typing span{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:tp 1.2s infinite;}
+  .chat-typing span:nth-child(2){animation-delay:.2s;}
+  .chat-typing span:nth-child(3){animation-delay:.4s;}
+  @keyframes tp{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+
+  .chat-inp-area{padding:10px 12px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end;flex-shrink:0;}
+  .chat-inp{flex:1;background:var(--navy3);border:1px solid var(--border);border-radius:9px;padding:9px 12px;color:var(--text);font-family:'Manrope',sans-serif;font-size:13px;outline:none;resize:none;max-height:100px;line-height:1.4;transition:border-color .2s;}
+  .chat-inp:focus{border-color:var(--cyan);}
+  .chat-inp::placeholder{color:var(--muted);}
+  .chat-send{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--cyan),var(--cyan2));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;transition:opacity .2s,transform .15s;color:var(--navy);}
+  .chat-send:hover{opacity:.9;transform:scale(1.05);}
+  .chat-send:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+  .chat-disc{font-size:10px;color:var(--muted);text-align:center;padding:0 12px 8px;flex-shrink:0;}
+
+  @media(max-width:540px){
+    #chat-panel{width:calc(100vw - 32px);right:16px;bottom:78px;}
+    #chat-fab{right:16px;bottom:16px;}
+  }
     .content{padding:18px;}
     .topbar{padding:0 16px;}
     .search-bar{width:auto;flex:1;}
@@ -719,6 +782,32 @@ window.__firebaseReady = new Promise(resolve => {
 <!-- ════ TOAST ════ -->
 <div class="toast" id="toast"></div>
 
+<!-- ════ CHAT FLUTUANTE ════ -->
+<button id="chat-fab" onclick="toggleChat()" title="Assistente IA Credere">
+  🤖<div class="fab-dot"></div>
+</button>
+
+<div id="chat-panel">
+  <div class="chat-hdr">
+    <div class="chat-hdr-ico">🤖</div>
+    <div class="chat-hdr-info">
+      <div class="chat-hdr-title">Assistente IA — Credere</div>
+      <div class="chat-hdr-sub">Análise de dashboards e insights</div>
+    </div>
+    <button class="chat-x" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-msgs" id="chat-msgs">
+    <div class="chat-typing" id="chat-typing">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+  <div class="chat-inp-area">
+    <textarea class="chat-inp" id="chat-inp" placeholder="Pergunte sobre os dashboards... (Enter para enviar)" rows="1"></textarea>
+    <button class="chat-send" id="chat-send-btn" onclick="sendChatMsg()">➤</button>
+  </div>
+  <div class="chat-disc">IA pode cometer erros — valide sempre dados críticos</div>
+</div>
+
 <script>
 // ══════════════════════════════════════════════
 //  ✏️  EDITE AQUI O SEU NOME
@@ -947,10 +1036,15 @@ function doLogin(){
   }
 
   renderAll();
+  document.getElementById('chat-fab').style.display='flex';
 }
 
 function doLogout(){
   currentUser = null;
+  chatMsgs = [];
+  document.getElementById('chat-msgs').innerHTML = '<div class="chat-typing" id="chat-typing"><span></span><span></span><span></span></div>';
+  document.getElementById('chat-panel').classList.remove('open');
+  document.getElementById('chat-fab').style.display='none';
   document.getElementById('app').style.display = 'none';
   document.getElementById('login-screen').style.display = 'block';
 }
@@ -1269,12 +1363,92 @@ document.querySelectorAll('.overlay').forEach(o => {
   });
 });
 
-function toast(msg, type='ok'){
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast show ' + type;
-  setTimeout(() => el.className = 'toast', 3000);
+// ══════════════════════════════════════════════
+//  CHAT IA
+// ══════════════════════════════════════════════
+// Cole sua chave da API Anthropic aqui quando tiver:
+const ANTHROPIC_API_KEY = 'SUA_CHAVE_AQUI'; // sk-ant-...
+
+const AI_SYSTEM = `Você é um assistente de análise de dados da Credere Consultoria e Fomento Mercantil, empresa de factoring/recebíveis baseada em Guarulhos, SP.
+
+Você ajuda os usuários a interpretar os dashboards do Power BI com insights práticos:
+- Quantos sacados precisam confirmar para atingir metas
+- Valores devidos de canhoto por cedente
+- Análise de carteira de recebíveis e títulos
+- Interpretação de gráficos e tendências operacionais
+- Sugestões de ação com base nos dados
+
+Quando o usuário descrever ou colar dados do dashboard, analise e responda de forma objetiva e direta.
+Responda sempre em português brasileiro.`;
+
+let chatMsgs = [], chatBusy = false;
+
+function toggleChat(){
+  const p = document.getElementById('chat-panel');
+  p.classList.toggle('open');
+  if(p.classList.contains('open')){
+    setTimeout(()=>document.getElementById('chat-inp').focus(),100);
+    if(chatMsgs.length===0) appendAI('Olá! 👋 Sou o assistente de análise da Credere. Posso ajudar a interpretar dashboards, calcular metas e analisar sua carteira. Como posso ajudar?');
+  }
 }
+
+function appendUser(txt){
+  const t = now();
+  chatMsgs.push({role:'user',content:txt});
+  document.getElementById('chat-msgs').innerHTML += `<div class="msg user"><div class="msg-bub">${esc(txt)}</div><div class="msg-time">${t}</div></div>`;
+  scrollMsgs();
+}
+function appendAI(txt){
+  chatMsgs.push({role:'assistant',content:txt});
+  document.getElementById('chat-msgs').innerHTML += `<div class="msg ai"><div class="msg-bub">${fmtAI(txt)}</div><div class="msg-time">${now()}</div></div>`;
+  scrollMsgs();
+}
+function showTyping(){ document.getElementById('chat-typing').style.display='flex'; scrollMsgs(); }
+function hideTyping(){ document.getElementById('chat-typing').style.display='none'; }
+function scrollMsgs(){ const m=document.getElementById('chat-msgs'); setTimeout(()=>m.scrollTop=m.scrollHeight,50); }
+function now(){ return new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }
+function esc(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtAI(t){ return esc(t).replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>'); }
+
+async function sendChatMsg(){
+  if(chatBusy) return;
+  const inp = document.getElementById('chat-inp');
+  const txt = inp.value.trim();
+  if(!txt) return;
+  inp.value=''; inp.style.height='auto';
+  appendUser(txt);
+  chatBusy=true;
+  document.getElementById('chat-send-btn').disabled=true;
+  showTyping();
+
+  if(ANTHROPIC_API_KEY==='SUA_CHAVE_AQUI'){
+    hideTyping();
+    appendAI('⚠️ Chave da API ainda não configurada. Peça ao administrador para inserir a chave Anthropic no arquivo do portal.');
+    chatBusy=false; document.getElementById('chat-send-btn').disabled=false; return;
+  }
+
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':ANTHROPIC_API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body: JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:AI_SYSTEM,messages:chatMsgs.slice(0,-1).concat([{role:'user',content:txt}])})
+    });
+    const d = await res.json();
+    hideTyping();
+    appendAI(d.content?.[0]?.text || 'Desculpe, não consegui processar. Tente novamente.');
+  } catch(e){
+    hideTyping();
+    appendAI('Erro de conexão. Verifique sua internet e tente novamente.');
+  }
+  chatBusy=false; document.getElementById('chat-send-btn').disabled=false;
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const inp = document.getElementById('chat-inp');
+  if(!inp) return;
+  inp.addEventListener('keydown', e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendChatMsg(); } });
+  inp.addEventListener('input', function(){ this.style.height='auto'; this.style.height=Math.min(this.scrollHeight,100)+'px'; });
+});
 </script>
 </body>
 </html>
