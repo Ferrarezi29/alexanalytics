@@ -1367,7 +1367,7 @@ document.querySelectorAll('.overlay').forEach(o => {
 //  CHAT IA
 // ══════════════════════════════════════════════
 // Cole sua chave da API Anthropic aqui quando tiver:
-const ANTHROPIC_API_KEY = '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';
+const ANTHROPIC_API_KEY = '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';
 
 const AI_SYSTEM = `Você é um assistente de análise de dados da Credere Consultoria e Fomento Mercantil, empresa de factoring/recebíveis baseada em Guarulhos, SP.
 
@@ -1435,10 +1435,16 @@ async function sendChatMsg(){
     });
     const d = await res.json();
     hideTyping();
-    appendAI(d.content?.[0]?.text || 'Desculpe, não consegui processar. Tente novamente.');
+    if(d.content?.[0]?.text){
+      appendAI(d.content[0].text);
+    } else if(d.error){
+      appendAI('⚠️ Erro da API: ' + d.error.message);
+    } else {
+      appendAI('Desculpe, não consegui processar. Tente novamente.');
+    }
   } catch(e){
     hideTyping();
-    appendAI('Erro de conexão. Verifique sua internet e tente novamente.');
+    appendAI('⚠️ Erro técnico: ' + e.message);
   }
   chatBusy=false; document.getElementById('chat-send-btn').disabled=false;
 }
